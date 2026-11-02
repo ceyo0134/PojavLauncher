@@ -2,22 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/fragment_menu_main"
-	android:gravity="top"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:orientation="vertical"
-	android:background="@color/background_app"
-	>
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/background_app">
+
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
+		android:fillViewport="true"
 		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintBottom_toTopOf="@id/mc_version_spinner">
+		app:layout_constraintBottom_toBottomOf="parent">
+
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
+
 			<androidx.constraintlayout.widget.Guideline
 				android:id="@+id/center_guideline"
 				android:layout_width="0dp"
@@ -35,20 +35,9 @@
 				android:orientation="vertical"
 				android:padding="20dp"
 				app:layout_constraintTop_toTopOf="parent">
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:background="@drawable/ceyo_pill_bg"
-					android:paddingHorizontal="12dp"
-					android:paddingVertical="4dp"
-					android:text="@string/ceyo_subtitle"
-					android:textColor="#FFFFFF"
-					android:textSize="12sp"
-					android:textStyle="bold" />
 				<LinearLayout
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginTop="14dp"
 					android:orientation="horizontal">
 					<TextView
 						android:layout_width="wrap_content"
@@ -72,17 +61,75 @@
 					android:text="@string/ceyo_tagline"
 					android:textColor="@color/secondary_text"
 					android:textSize="14sp" />
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="14dp"
+					android:background="@drawable/ceyo_pill_bg"
+					android:paddingHorizontal="12dp"
+					android:paddingVertical="4dp"
+					android:text="@string/ceyo_subtitle"
+					android:textColor="#FFFFFF"
+					android:textSize="12sp"
+					android:textStyle="bold" />
 			</LinearLayout>
 
-			<!-- Wiki / Discord -->
+			<!-- Version + Play card (moved from the bottom to the top) -->
+			<LinearLayout
+				android:id="@+id/ceyo_play_card"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="12dp"
+				android:background="@drawable/ceyo_panel_bg"
+				android:orientation="vertical"
+				android:padding="12dp"
+				app:layout_constraintTop_toBottomOf="@id/ceyo_header">
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_vertical"
+					android:orientation="horizontal">
+
+					<ImageButton
+						android:id="@+id/edit_profile_button"
+						android:layout_width="@dimen/_52sdp"
+						android:layout_height="@dimen/_52sdp"
+						android:background="?android:attr/selectableItemBackground"
+						android:src="@drawable/ic_edit_profile" />
+
+					<com.kdt.mcgui.mcVersionSpinner
+						android:id="@+id/mc_version_spinner"
+						android:layout_width="0dp"
+						android:layout_height="@dimen/_52sdp"
+						android:layout_weight="1"
+						android:background="@drawable/ceyo_card_bg"
+						android:drawableEnd="@drawable/spinner_arrow"
+						android:paddingHorizontal="@dimen/_8sdp"
+						app:drawableEndPadding="@dimen/_1sdp"
+						app:drawableEndSize="@dimen/padding_heavy"
+						app:drawableStartIntegerScaling="true"
+						app:drawableStartSize="@dimen/_36sdp" />
+				</LinearLayout>
+
+				<com.kdt.mcgui.MineButton
+					android:id="@+id/play_button"
+					android:layout_width="match_parent"
+					android:layout_height="@dimen/_62sdp"
+					android:layout_marginTop="10dp"
+					android:text="@string/ceyo_play"
+					android:textAllCaps="false" />
+			</LinearLayout>
+
+			<!-- Wiki / Discord (hidden, kept for the code that binds them) -->
 			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/news_button"
-				android:visibility="gone"
 				style="@style/LauncherMenuButton.Universal"
 				android:layout_width="0dp"
-				android:text="@string/mcl_tab_wiki"
+				android:visibility="gone"
 				android:drawableStart="@drawable/ic_menu_news"
-				app:layout_constraintTop_toBottomOf="@id/ceyo_header"
+				android:text="@string/mcl_tab_wiki"
+				app:layout_constraintTop_toBottomOf="@id/ceyo_play_card"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toStartOf="@id/center_guideline" />
 			<View
@@ -95,22 +142,22 @@
 				app:layout_constraintBottom_toBottomOf="@id/news_button"/>
 			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/discord_button"
-				android:visibility="gone"
 				style="@style/LauncherMenuButton.Universal"
 				android:layout_width="0dp"
-				android:text="@string/mcl_button_discord"
+				android:visibility="gone"
 				android:drawableStart="@drawable/ic_discord"
+				android:text="@string/mcl_button_discord"
 				app:layout_constraintTop_toTopOf="@id/news_button"
 				app:layout_constraintStart_toEndOf="@id/center_guideline"
 				app:layout_constraintEnd_toEndOf="parent"/>
 
-			<!-- Hızlı İşlemler -->
+			<!-- Quick actions: bento layout -->
 			<TextView
 				android:id="@+id/ceyo_quick_title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="16dp"
-				android:layout_marginTop="16dp"
+				android:layout_marginTop="18dp"
 				android:text="@string/ceyo_quick_actions"
 				android:textColor="@color/primary_text"
 				android:textSize="18sp"
@@ -119,21 +166,12 @@
 				app:layout_constraintStart_toStartOf="parent" />
 
 			<com.kdt.mcgui.LauncherMenuButton
-				android:id="@+id/ceyo_mod_button"
-				style="@style/LauncherMenuButton.Universal"
-				android:layout_width="0dp"
-				android:drawableStart="@drawable/ic_add_modded"
-				android:text="@string/ceyo_mods"
-				app:layout_constraintTop_toBottomOf="@id/ceyo_quick_title"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintEnd_toStartOf="@id/center_guideline" />
-			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/custom_control_button"
 				style="@style/LauncherMenuButton.Universal"
 				android:layout_width="0dp"
 				android:drawableStart="@drawable/ic_menu_custom_controls"
 				android:text="@string/ceyo_controls"
-				app:layout_constraintTop_toTopOf="@id/ceyo_mod_button"
+				app:layout_constraintTop_toBottomOf="@id/ceyo_quick_title"
 				app:layout_constraintStart_toEndOf="@id/center_guideline"
 				app:layout_constraintEnd_toEndOf="parent" />
 			<com.kdt.mcgui.LauncherMenuButton
@@ -142,7 +180,18 @@
 				android:layout_width="0dp"
 				android:drawableStart="@drawable/ic_menu_install_jar"
 				android:text="@string/ceyo_run_jar"
-				app:layout_constraintTop_toBottomOf="@id/ceyo_mod_button"
+				app:layout_constraintTop_toBottomOf="@id/custom_control_button"
+				app:layout_constraintStart_toEndOf="@id/center_guideline"
+				app:layout_constraintEnd_toEndOf="parent" />
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/ceyo_mod_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				android:drawableStart="@drawable/ic_add_modded"
+				android:text="@string/ceyo_mods"
+				app:layout_constraintTop_toTopOf="@id/custom_control_button"
+				app:layout_constraintBottom_toBottomOf="@id/install_jar_button"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toStartOf="@id/center_guideline" />
 			<com.kdt.mcgui.LauncherMenuButton
@@ -151,74 +200,20 @@
 				android:layout_width="0dp"
 				android:drawableStart="@drawable/ic_folder"
 				android:text="@string/ceyo_open_dir"
-				app:layout_constraintTop_toTopOf="@id/install_jar_button"
-				app:layout_constraintStart_toEndOf="@id/center_guideline"
-				app:layout_constraintEnd_toEndOf="parent" />
+				android:layout_marginBottom="16dp"
+				app:layout_constraintTop_toBottomOf="@id/install_jar_button"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/center_guideline"
+				app:layout_constraintBottom_toBottomOf="parent" />
 			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/share_logs_button"
 				style="@style/LauncherMenuButton.Universal"
 				android:layout_width="0dp"
 				android:drawableStart="@android:drawable/ic_menu_share"
 				android:text="@string/ceyo_share_logs"
-				app:layout_constraintTop_toBottomOf="@id/install_jar_button"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="@id/open_files_button"
+				app:layout_constraintStart_toEndOf="@id/center_guideline"
 				app:layout_constraintEnd_toEndOf="parent" />
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
-
-	<com.kdt.mcgui.mcVersionSpinner
-		android:id="@+id/mc_version_spinner"
-		android:layout_width="0dp"
-		android:layout_height="@dimen/_52sdp"
-		android:layout_marginStart="@dimen/_17sdp"
-		android:layout_marginBottom="@dimen/_8sdp"
-		android:paddingHorizontal="@dimen/_8sdp"
-		android:background="@drawable/ceyo_card_bg"
-		android:drawableEnd="@drawable/spinner_arrow"
-
-		app:drawableEndSize="@dimen/padding_heavy"
-		app:drawableStartIntegerScaling="true"
-		app:drawableStartSize="@dimen/_36sdp"
-		app:drawableEndPadding="@dimen/_1sdp"
-
-		app:layout_constraintBottom_toTopOf="@id/play_button"
-		app:layout_constraintEnd_toStartOf="@+id/edit_profile_button"
-		app:layout_constraintStart_toStartOf="parent" />
-
-	<ImageButton
-		android:id="@+id/edit_profile_button"
-		android:layout_width="@dimen/_52sdp"
-		android:layout_height="@dimen/_52sdp"
-		android:background="?android:attr/selectableItemBackground"
-
-		android:src="@drawable/ic_edit_profile"
-		android:layout_marginBottom="@dimen/_8sdp"
-		app:layout_constraintBottom_toBottomOf="@+id/mc_version_spinner"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintTop_toTopOf="@+id/mc_version_spinner" />
-
-	<!-- This view is for cosmetic purpose only -->
-	<View
-		android:id="@+id/_background_display_view"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:background="@color/background_bottom_bar"
-		android:translationZ="-1dp"
-
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toTopOf="@id/mc_version_spinner" />
-
-	<com.kdt.mcgui.MineButton
-		android:id="@+id/play_button"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/_62sdp"
-
-		android:layout_marginHorizontal="@dimen/_17sdp"
-		android:layout_marginBottom="@dimen/_15sdp"
-
-		android:textAllCaps="false"
-		android:text="@string/ceyo_play"
-		app:layout_constraintBottom_toBottomOf="parent"
-		/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
