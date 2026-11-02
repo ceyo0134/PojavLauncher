@@ -32,35 +32,19 @@ jobs:
           cd app_pojavlauncher/libs
           wget https://github.com/PojavLauncherTeam/LTW/releases/latest/download/ltw-release.aar
 
-      - name: Get JRE 8
-        uses: dawidd6/action-download-artifact@v9
-        with:
-          workflow: build.yml
-          path: app_pojavlauncher/src/main/assets/components/jre
-          workflow_conclusion: success
-          repo: PojavLauncherTeam/android-openjdk-build-multiarch
-          branch: buildjre8
-          name: jre8-pojav
-
-      - name: Get JRE17
-        uses: dawidd6/action-download-artifact@v9
-        with:
-          workflow: build.yml
-          path: app_pojavlauncher/src/main/assets/components/jre-new
-          workflow_conclusion: success
-          repo: PojavLauncherTeam/android-openjdk-build-multiarch
-          branch: buildjre17-21
-          name: jre17-pojav
-
-      - name: Get JRE21
-        uses: dawidd6/action-download-artifact@v9
-        with:
-          workflow: build.yml
-          path: app_pojavlauncher/src/main/assets/components/jre-21
-          workflow_conclusion: success
-          repo: PojavLauncherTeam/android-openjdk-build-multiarch
-          branch: buildjre17-21
-          name: jre21-pojav
+      - name: Get JRE 8 / 17 / 21 (resmi Pojav release APK'sindan)
+        run: |
+          # Eski artifact deposu (android-openjdk-build-multiarch) arsivlendi ve artifact'leri silindi.
+          # Release APK'si kalici oldugu icin JRE'leri oradan aliyoruz.
+          curl -fL --retry 5 --retry-delay 5 -o /tmp/pojav-release.apk \
+            https://github.com/PojavLauncherTeam/PojavLauncher/releases/download/gladiolus/PojavLauncher.apk
+          mkdir -p app_pojavlauncher/src/main/assets
+          unzip -q -o /tmp/pojav-release.apk \
+            'assets/components/jre/*' 'assets/components/jre-new/*' 'assets/components/jre-21/*' \
+            -d /tmp/pojav-apk
+          cp -r /tmp/pojav-apk/assets/components app_pojavlauncher/src/main/assets/
+          ls -la app_pojavlauncher/src/main/assets/components/*
+          rm -rf /tmp/pojav-release.apk /tmp/pojav-apk
 
       - uses: gradle/actions/setup-gradle@v4
         with:
