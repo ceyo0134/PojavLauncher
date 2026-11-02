@@ -38,8 +38,8 @@ public class DrawerPullButton extends View {
 
     private void init(){
         mDrawable = VectorDrawableCompat.create(getContext().getResources(), R.drawable.ic_sharp_settings_24, null);
-        setAlpha(0.33f);
-        mBackgroundPaint.setColor(Color.BLACK);
+        setAlpha(0.7f);
+        mBackgroundPaint.setColor(Color.RED);
         mBackgroundPaint.setAntiAlias(true);
         mSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
@@ -145,7 +145,7 @@ public class DrawerPullButton extends View {
             case MotionEvent.ACTION_UP:
                 if(mDragging) {
                     mDragging = false;
-                    setAlpha(0.33f);
+                    setAlpha(0.7f);
                     savePosition();
                 } else {
                     performClick();
@@ -154,7 +154,7 @@ public class DrawerPullButton extends View {
             case MotionEvent.ACTION_CANCEL:
                 if(mDragging) {
                     mDragging = false;
-                    setAlpha(0.33f);
+                    setAlpha(0.7f);
                     savePosition();
                 }
                 return true;
