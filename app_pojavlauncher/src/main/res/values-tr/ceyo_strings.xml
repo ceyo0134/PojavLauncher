@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ceyo_launcher_word">Launcher</string>
+    <string name="ceyo_subtitle">Minecraft Launcher</string>
+    <string name="ceyo_tagline">Daha kararlı, daha uyumlu!</string>
+    <string name="ceyo_quick_actions">Hızlı İşlemler</string>
+    <string name="ceyo_controls">Kontrol Düzeni</string>
+    <string name="ceyo_run_jar">.jar Çalıştır</string>
+    <string name="ceyo_open_dir">Dizini Aç</string>
+    <string name="ceyo_share_logs">Log Paylaş</string>
+    <string name="ceyo_play">Oyunu Başlat</string>
+    <string name="ceyo_home">Ana Sayfa</string>
+    <string name="ceyo_version_label">Oyun sürümü</string>
+    <string name="ceyo_mods">Mod Yükle</string>
+    <string name="ceyo_perm_title">Dosya erişimi gerekli</string>
+    <string name="ceyo_perm_msg">Oyun dosyaları Belgeler/.minecraft klasörüne kaydedilir. Bunun için "tüm dosyalara erişim" iznini açman gerekiyor.\n\nNot: Başında nokta olduğu için klasör bazı dosya yöneticilerinde gizli görünür; "gizli dosyaları göster" seçeneğini aç.</string>
+    <string name="ceyo_perm_allow">İzin ver</string>
+    <string name="ceyo_perm_skip">Şimdilik atla</string>
+    <string name="ceyo_hidden_hint">Klasör gizli (.minecraft). Dosya yöneticisinde \"gizli dosyaları göster\" seçeneğini aç.</string>
+    <string name="ceyo_migrated">Eski oyun dosyaların Belgeler/.minecraft içine taşındı.</string>
+</resources>

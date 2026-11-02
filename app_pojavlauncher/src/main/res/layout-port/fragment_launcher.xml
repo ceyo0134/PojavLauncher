@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/fragment_menu_main"
+	android:gravity="top"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:background="@color/background_app"
+	>
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/mc_version_spinner">
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/center_guideline"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				android:orientation="vertical"
+				app:layout_constraintGuide_percent="0.5"/>
+
+			<!-- Banner -->
+			<LinearLayout
+				android:id="@+id/ceyo_header"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="12dp"
+				android:background="@drawable/ceyo_header_bg"
+				android:orientation="vertical"
+				android:padding="20dp"
+				app:layout_constraintTop_toTopOf="parent">
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:background="@drawable/ceyo_pill_bg"
+					android:paddingHorizontal="12dp"
+					android:paddingVertical="4dp"
+					android:text="@string/ceyo_subtitle"
+					android:textColor="#FFFFFF"
+					android:textSize="12sp"
+					android:textStyle="bold" />
+				<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="14dp"
+					android:orientation="horizontal">
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Ceyo "
+						android:textColor="#FFFFFF"
+						android:textSize="30sp"
+						android:textStyle="bold" />
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/ceyo_launcher_word"
+						android:textColor="@color/ceyo_accent"
+						android:textSize="30sp"
+						android:textStyle="bold|italic" />
+				</LinearLayout>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="6dp"
+					android:text="@string/ceyo_tagline"
+					android:textColor="@color/secondary_text"
+					android:textSize="14sp" />
+			</LinearLayout>
+
+			<!-- Wiki / Discord -->
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/news_button"
+				android:visibility="gone"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:text="@string/mcl_tab_wiki"
+				android:drawableStart="@drawable/ic_menu_news"
+				app:layout_constraintTop_toBottomOf="@id/ceyo_header"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/center_guideline" />
+			<View
+				android:id="@+id/social_divider"
+				style="@style/LauncherFragment_Divider"
+				android:visibility="gone"
+				app:layout_constraintTop_toTopOf="@id/news_button"
+				app:layout_constraintStart_toStartOf="@id/center_guideline"
+				app:layout_constraintEnd_toEndOf="@id/center_guideline"
+				app:layout_constraintBottom_toBottomOf="@id/news_button"/>
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/discord_button"
+				android:visibility="gone"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:text="@string/mcl_button_discord"
+				android:drawableStart="@drawable/ic_discord"
+				app:layout_constraintTop_toTopOf="@id/news_button"
+				app:layout_constraintStart_toEndOf="@id/center_guideline"
+				app:layout_constraintEnd_toEndOf="parent"/>
+
+			<!-- Hızlı İşlemler -->
+			<TextView
+				android:id="@+id/ceyo_quick_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				android:text="@string/ceyo_quick_actions"
+				android:textColor="@color/primary_text"
+				android:textSize="18sp"
+				android:textStyle="bold"
+				app:layout_constraintTop_toBottomOf="@id/news_button"
+				app:layout_constraintStart_toStartOf="parent" />
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/ceyo_mod_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:drawableStart="@drawable/ic_add_modded"
+				android:text="@string/ceyo_mods"
+				app:layout_constraintTop_toBottomOf="@id/ceyo_quick_title"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/center_guideline" />
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/custom_control_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:drawableStart="@drawable/ic_menu_custom_controls"
+				android:text="@string/ceyo_controls"
+				app:layout_constraintTop_toTopOf="@id/ceyo_mod_button"
+				app:layout_constraintStart_toEndOf="@id/center_guideline"
+				app:layout_constraintEnd_toEndOf="parent" />
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/install_jar_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:drawableStart="@drawable/ic_menu_install_jar"
+				android:text="@string/ceyo_run_jar"
+				app:layout_constraintTop_toBottomOf="@id/ceyo_mod_button"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/center_guideline" />
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/open_files_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:drawableStart="@drawable/ic_folder"
+				android:text="@string/ceyo_open_dir"
+				app:layout_constraintTop_toTopOf="@id/install_jar_button"
+				app:layout_constraintStart_toEndOf="@id/center_guideline"
+				app:layout_constraintEnd_toEndOf="parent" />
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/share_logs_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:drawableStart="@android:drawable/ic_menu_share"
+				android:text="@string/ceyo_share_logs"
+				app:layout_constraintTop_toBottomOf="@id/install_jar_button"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toEndOf="parent" />
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
+
+	<com.kdt.mcgui.mcVersionSpinner
+		android:id="@+id/mc_version_spinner"
+		android:layout_width="0dp"
+		android:layout_height="@dimen/_52sdp"
+		android:layout_marginStart="@dimen/_17sdp"
+		android:layout_marginBottom="@dimen/_8sdp"
+		android:paddingHorizontal="@dimen/_8sdp"
+		android:background="@drawable/ceyo_card_bg"
+		android:drawableEnd="@drawable/spinner_arrow"
+
+		app:drawableEndSize="@dimen/padding_heavy"
+		app:drawableStartIntegerScaling="true"
+		app:drawableStartSize="@dimen/_36sdp"
+		app:drawableEndPadding="@dimen/_1sdp"
+
+		app:layout_constraintBottom_toTopOf="@id/play_button"
+		app:layout_constraintEnd_toStartOf="@+id/edit_profile_button"
+		app:layout_constraintStart_toStartOf="parent" />
+
+	<ImageButton
+		android:id="@+id/edit_profile_button"
+		android:layout_width="@dimen/_52sdp"
+		android:layout_height="@dimen/_52sdp"
+		android:background="?android:attr/selectableItemBackground"
+
+		android:src="@drawable/ic_edit_profile"
+		android:layout_marginBottom="@dimen/_8sdp"
+		app:layout_constraintBottom_toBottomOf="@+id/mc_version_spinner"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/mc_version_spinner" />
+
+	<!-- This view is for cosmetic purpose only -->
+	<View
+		android:id="@+id/_background_display_view"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:background="@color/background_bottom_bar"
+		android:translationZ="-1dp"
+
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toTopOf="@id/mc_version_spinner" />
+
+	<com.kdt.mcgui.MineButton
+		android:id="@+id/play_button"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/_62sdp"
+
+		android:layout_marginHorizontal="@dimen/_17sdp"
+		android:layout_marginBottom="@dimen/_15sdp"
+
+		android:textAllCaps="false"
+		android:text="@string/ceyo_play"
+		app:layout_constraintBottom_toBottomOf="parent"
+		/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

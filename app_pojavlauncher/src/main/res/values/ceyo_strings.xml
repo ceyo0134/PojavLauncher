@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ceyo_launcher_word">Launcher</string>
+    <string name="ceyo_subtitle">Minecraft Launcher</string>
+    <string name="ceyo_tagline">More stable, more compatible!</string>
+    <string name="ceyo_quick_actions">Quick actions</string>
+    <string name="ceyo_controls">Control layout</string>
+    <string name="ceyo_run_jar">Run .jar</string>
+    <string name="ceyo_open_dir">Open folder</string>
+    <string name="ceyo_share_logs">Share log</string>
+    <string name="ceyo_play">Play</string>
+    <string name="ceyo_home">Home</string>
+    <string name="ceyo_version_label">Game version</string>
+    <string name="ceyo_mods">Install mods</string>
+    <string name="ceyo_perm_title">File access required</string>
+    <string name="ceyo_perm_msg">Game files are stored in Documents/.minecraft. Please enable "all files access" for that.\n\nNote: the folder starts with a dot, so some file managers hide it; enable "show hidden files".</string>
+    <string name="ceyo_perm_allow">Allow</string>
+    <string name="ceyo_perm_skip">Skip for now</string>
+    <string name="ceyo_hidden_hint">The folder is hidden (.minecraft). Enable \"show hidden files\" in your file manager.</string>
+    <string name="ceyo_migrated">Your old game files were moved to Documents/.minecraft.</string>
+</resources>
