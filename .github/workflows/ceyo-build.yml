@@ -31,6 +31,7 @@ jobs:
 
       - name: Get JRE 8
         uses: dawidd6/action-download-artifact@v9
+        continue-on-error: true
         with:
           workflow: build.yml
           path: app_pojavlauncher/src/main/assets/components/jre
@@ -41,6 +42,7 @@ jobs:
 
       - name: Get JRE17
         uses: dawidd6/action-download-artifact@v9
+        continue-on-error: true
         with:
           workflow: build.yml
           path: app_pojavlauncher/src/main/assets/components/jre-new
@@ -51,6 +53,7 @@ jobs:
 
       - name: Get JRE21
         uses: dawidd6/action-download-artifact@v9
+        continue-on-error: true
         with:
           workflow: build.yml
           path: app_pojavlauncher/src/main/assets/components/jre-21
