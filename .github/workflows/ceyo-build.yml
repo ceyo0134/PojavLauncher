@@ -66,7 +66,14 @@ jobs:
 
       - name: Build Debug .apk
         run: |
-          gradle :app_pojavlauncher:assembleDebug
+          set +e
+          gradle :app_pojavlauncher:assembleDebug 2>&1 | tee /tmp/gradle.log
+          RC=${PIPESTATUS[0]}
+          if [ $RC -ne 0 ]; then
+            grep -E "error:|\.java:[0-9]+|What went wrong|Execution failed|symbol:|location:" /tmp/gradle.log | head -20 | while read -r l; do echo "::error::${l:0:400}"; done
+            exit $RC
+          fi
+          set -e
           mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/CeyoLauncher-debug.apk
 
       - name: Upload APK
