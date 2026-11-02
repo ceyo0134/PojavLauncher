@@ -3,13 +3,17 @@
     <color name="control_button_color">#4CC4C4C4</color>
     <color name="control_button_pressed_color">#4D000000</color>
 
-    <color name="minebutton_color">#57CC33</color>
-    <color name="background_app">#181818</color>
+    <color name="minebutton_color">#22D3EE</color>
+    <color name="background_app">#0B0F1A</color>
     <color name="divider">@color/background_overlay</color>
-    <color name="background_overlay">#464646</color>
-    <color name="background_status_bar">#242424</color>
-    <color name="background_bottom_bar">#232323</color>
+    <color name="background_overlay">#1F2937</color>
+    <color name="background_status_bar">#0E1424</color>
+    <color name="background_bottom_bar">#111827</color>
 
     <color name="primary_text">#FFFFFF</color>
-    <color name="secondary_text">#B2B2B2</color>
+    <color name="secondary_text">#9CA3AF</color>
+    <color name="ceyo_accent">#22D3EE</color>
+    <color name="ceyo_accent_dark">#0891B2</color>
+    <color name="ceyo_violet">#8B5CF6</color>
+    <color name="ceyo_card">#151B2B</color>
 </resources>

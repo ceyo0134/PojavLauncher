@@ -20,7 +20,9 @@
     </style>
 
     <style name="LauncherMenuButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:background">@drawable/ceyo_card_ripple</item>
+        <item name="android:layout_marginHorizontal">8dp</item>
+        <item name="android:layout_marginVertical">4dp</item>
     </style>
 
     <style name="LauncherMenuButton.Universal" parent="LauncherMenuButton">
