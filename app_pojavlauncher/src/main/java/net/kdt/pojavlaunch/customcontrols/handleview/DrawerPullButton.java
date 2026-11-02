@@ -127,7 +127,7 @@ public class DrawerPullButton extends View {
                 mStartTx = getTranslationX();
                 mStartTy = getTranslationY();
                 mDragging = false;
-                parent.requestDisallowInterceptTouchEvent(true);
+                getParent().requestDisallowInterceptTouchEvent(true);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 float dx = event.getRawX() - mDownRawX;
