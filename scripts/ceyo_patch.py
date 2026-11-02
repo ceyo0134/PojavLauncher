@@ -89,6 +89,30 @@ patch(JAVA / "TestStorageActivity.java", [
 ])
 # izin verilince (Android <= 10) exit() yerine askAllFilesOrExit() zinciri gerekmez; exit() dogrudan kalir.
 
+# ---- ProfileTypeSelectFragment.java: Forge/Fabric/Quilt/OptiFine kurulumunu demo/yerel hesap kilidinden cikar ----
+patch(JAVA / "fragments/ProfileTypeSelectFragment.java", [
+    ("// Ceyo: demo kilidi kaldirildi",
+     "        if(Tools.isLocalProfile(requireContext()) || Tools.isDemoProfile(requireContext())){\n"
+     "            Toast.makeText(requireContext(), R.string.toast_not_available_demo, Toast.LENGTH_LONG).show();\n"
+     "        } else {\n"
+     "            Tools.swapFragment(requireActivity(), fragmentClass, tag, null);\n"
+     "        }\n",
+     "        // Ceyo: demo kilidi kaldirildi\n"
+     "        Tools.swapFragment(requireActivity(), fragmentClass, tag, null);\n"),
+])
+
+# ---- Uygulama adi: tum dillerde CyLauncher ----
+import re
+RES = ROOT / "app_pojavlauncher/src/main/res"
+changed = 0
+for f in RES.glob("values*/strings.xml"):
+    t = f.read_text(encoding="utf-8")
+    n = re.sub(r'(<string name="app_name"[^>]*>)[^<]*(</string>)', r'\g<1>CyLauncher\g<2>', t)
+    n = re.sub(r'(<string name="app_short_name"[^>]*>)[^<]*(</string>)', r'\g<1>CyLauncher\g<2>', n)
+    if n != t:
+        f.write_text(n, encoding="utf-8"); changed += 1
+print(f"  [ok]   uygulama adi {changed} dil dosyasinda guncellendi")
+
 # ---- AndroidManifest.xml ----
 patch(MANIFEST, [
     ("MANAGE_EXTERNAL_STORAGE",
