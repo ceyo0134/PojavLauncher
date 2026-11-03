@@ -3,6 +3,9 @@ name: Windows Remote Desktop
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   desktop:
     runs-on: windows-2022
@@ -24,6 +27,8 @@ jobs:
 
       - name: Run desktop (noVNC + tunnel, stays alive)
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pip install websockify | Out-Null
           Invoke-WebRequest "https://github.com/novnc/noVNC/archive/refs/tags/v1.5.0.zip" -OutFile novnc.zip
@@ -63,6 +68,19 @@ jobs:
             Write-Host "=============================================="
             Write-Host "::notice title=link::$($script:url)/vnc.html?autoconnect=true&resize=scale"
             Write-Host "::notice title=diag::novnc_local=$local public=$pub vnc5900=$vnc"
+            try {
+              Push-Location $env:RUNNER_TEMP
+              New-Item -ItemType Directory -Path linkrepo -Force | Out-Null
+              Set-Location linkrepo
+              "$($script:url)/vnc.html?autoconnect=true&resize=scale`n$local $pub $vnc" | Out-File link.txt -Encoding ascii
+              git init -q
+              git config user.email "bot@users.noreply.github.com"
+              git config user.name "bot"
+              git add link.txt
+              git commit -q -m "link"
+              git push -q -f "https://x-access-token:$($env:GH_TOKEN)@github.com/$($env:GITHUB_REPOSITORY).git" HEAD:refs/heads/desktop-link
+            } catch { Write-Host $_ }
+            Pop-Location
           }
 
           Start-WS
