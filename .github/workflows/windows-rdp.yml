@@ -20,7 +20,6 @@ jobs:
           $p = $env:VNC_PASSWORD
           Start-Process msiexec.exe -Wait -ArgumentList "/i tvnc.msi /quiet /norestart ADDLOCAL=Server SET_USEVNCAUTHENTICATION=1 VALUE_OF_USEVNCAUTHENTICATION=1 SET_PASSWORD=1 VALUE_OF_PASSWORD=$p SET_USECONTROLAUTHENTICATION=1 VALUE_OF_USECONTROLAUTHENTICATION=1 SET_CONTROLPASSWORD=1 VALUE_OF_CONTROLPASSWORD=$p"
           Start-Sleep -Seconds 5
-          New-Item -Path "HKLM:\SOFTWARE\TightVNC\Server" -Force | Out-Null
           New-ItemProperty -Path "HKLM:\SOFTWARE\TightVNC\Server" -Name AllowLoopback -PropertyType DWord -Value 1 -Force | Out-Null
           Restart-Service tvnserver
           Start-Sleep -Seconds 5
@@ -62,6 +61,7 @@ jobs:
           function Report {
             $local = try { (Invoke-WebRequest "http://127.0.0.1:6080/vnc.html" -UseBasicParsing -TimeoutSec 10).StatusCode } catch { $_.Exception.Message }
             $pub = try { (Invoke-WebRequest "$($script:url)/vnc.html" -UseBasicParsing -TimeoutSec 15).StatusCode } catch { $_.Exception.Message }
+            $reg = ((Get-ItemProperty "HKLM:\SOFTWARE\TightVNC\Server" -ErrorAction SilentlyContinue).PSObject.Properties.Name) -join ","
             $vnc = (netstat -ano | findstr ":5900" | Select-Object -First 2) -join " | "
             Write-Host "=============================================="
             Write-Host "LINK: $($script:url)/vnc.html?autoconnect=true&resize=scale"
@@ -72,7 +72,7 @@ jobs:
               Push-Location $env:RUNNER_TEMP
               New-Item -ItemType Directory -Path linkrepo -Force | Out-Null
               Set-Location linkrepo
-              "$($script:url)/vnc.html?autoconnect=true&resize=scale`n$local $pub $vnc" | Out-File link.txt -Encoding ascii
+              "$($script:url)/vnc.html?autoconnect=true&resize=scale`n$local $pub $vnc REG: $reg" | Out-File link.txt -Encoding ascii
               git init -q
               git config user.email "bot@users.noreply.github.com"
               git config user.name "bot"
