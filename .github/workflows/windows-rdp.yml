@@ -29,6 +29,8 @@ jobs:
           New-ItemProperty -Path "HKLM:\SOFTWARE\TightVNC\Server" -Name PollingInterval -PropertyType DWord -Value 30 -Force | Out-Null
           Restart-Service tvnserver
           Start-Sleep -Seconds 5
+          try { Set-MpPreference -DisableRealtimeMonitoring $true } catch { Write-Host "defender: $_" }
+          try { powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c } catch { }
 
       - name: Run desktop (noVNC + tunnel + backups, stays alive)
         shell: pwsh
@@ -84,7 +86,7 @@ jobs:
           function Start-CF {
             $script:n++
             $err = "cf$($script:n).err"
-            $script:cf = Start-Process .\cloudflared.exe -ArgumentList "tunnel --url http://127.0.0.1:6080 --no-autoupdate --protocol http2" -RedirectStandardError $err -RedirectStandardOutput "cf$($script:n).out" -PassThru -WindowStyle Hidden
+            $script:cf = Start-Process .\cloudflared.exe -ArgumentList "tunnel --url http://127.0.0.1:6080 --no-autoupdate" -RedirectStandardError $err -RedirectStandardOutput "cf$($script:n).out" -PassThru -WindowStyle Hidden
             $script:url = $null
             for ($i = 0; $i -lt 40 -and -not $script:url; $i++) {
               Start-Sleep -Seconds 3
@@ -119,17 +121,43 @@ jobs:
             Pop-Location
           }
 
+          function Diag {
+            try {
+              $a = Get-Process | Select-Object Id, ProcessName, CPU
+              Start-Sleep -Seconds 3
+              $b = Get-Process | Select-Object Id, ProcessName, CPU
+              $d = foreach ($p in $b) { $o = $a | Where-Object { $_.Id -eq $p.Id } | Select-Object -First 1; if ($o -and $p.CPU -ne $null -and $o.CPU -ne $null) { [pscustomobject]@{ N = $p.ProcessName; D = [math]::Round(($p.CPU - $o.CPU) / 3 * 100, 0) } } }
+              $top = ($d | Sort-Object D -Descending | Select-Object -First 7 | ForEach-Object { "$($_.N)=$($_.D)%" }) -join ", "
+              $os = Get-CimInstance Win32_OperatingSystem
+              $mem = "{0:N0}MB free of {1:N0}MB" -f ($os.FreePhysicalMemory / 1024), ($os.TotalVisibleMemorySize / 1024)
+              $res = (Get-CimInstance Win32_VideoController | ForEach-Object { "$($_.CurrentHorizontalResolution)x$($_.CurrentVerticalResolution)" }) -join ","
+              $cpus = (Get-CimInstance Win32_Processor | Measure-Object -Property NumberOfLogicalProcessors -Sum).Sum
+              $proto = (Select-String -Path "cf*.err" -Pattern "protocol|Registered tunnel|location=" -ErrorAction SilentlyContinue | Select-Object -First 4 | ForEach-Object { $_.Line.Substring([math]::Max(0, $_.Line.Length - 110)) }) -join " | "
+              $txt = "time=$(Get-Date -Format u) cpus=$cpus res=$res mem=$mem`ntop(1core=100%): $top`ntunnel: $proto"
+              Push-Location (Join-Path $env:RUNNER_TEMP "linkrepo")
+              $txt | Out-File diag.txt -Encoding ascii
+              git add diag.txt
+              git commit -q -m diag
+              git push -q -f "https://x-access-token:$($env:GH_TOKEN)@github.com/$($env:GITHUB_REPOSITORY).git" HEAD:refs/heads/desktop-link
+              Pop-Location
+            } catch { Write-Host "diag error: $_" }
+          }
+
           Start-WS
           Start-CF
           Report
+          Diag
 
           $end = (Get-Date).AddMinutes(335)
           $lastb = Get-Date
+          $lastd = Get-Date
+          $script:dn = 0
           while ((Get-Date) -lt $end) {
             Start-Sleep -Seconds 20
             if ($script:ws.HasExited) { Write-Host "websockify died, restarting"; Start-WS }
             if ($script:cf.HasExited) { Write-Host "cloudflared died, restarting"; Start-CF; Report }
             if (((Get-Date) - $lastb).TotalMinutes -ge 10) { Do-Backup $false; $lastb = Get-Date }
+            if ((((Get-Date) - $lastd).TotalSeconds -ge 150) -and ($script:dn -lt 12)) { Diag; $script:dn++; $lastd = Get-Date }
           }
 
       - name: Final backup
