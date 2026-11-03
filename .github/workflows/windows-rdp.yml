@@ -1,0 +1,33 @@
+name: Windows Remote Desktop
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rdp:
+    runs-on: windows-2022
+    timeout-minutes: 125
+    steps:
+      - name: Enable RDP and set password
+        shell: pwsh
+        env:
+          RDP_PASSWORD: ${{ secrets.RDP_PASSWORD }}
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
+          Set-LocalUser -Name runneradmin -Password (ConvertTo-SecureString $env:RDP_PASSWORD -AsPlainText -Force)
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          hostname: gh-windows
+
+      - name: Keep alive for 2 hours
+        shell: pwsh
+        run: |
+          tailscale ip -4
+          Write-Host "RDP ready. User: runneradmin. Closing in 2 hours."
+          $end = (Get-Date).AddMinutes(120)
+          while ((Get-Date) -lt $end) { Start-Sleep -Seconds 30 }
