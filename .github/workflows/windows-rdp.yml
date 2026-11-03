@@ -58,6 +58,14 @@ jobs:
           pip install websockify | Out-Null
           Invoke-WebRequest "https://github.com/novnc/noVNC/archive/refs/tags/v1.5.0.zip" -OutFile novnc.zip
           Expand-Archive novnc.zip -DestinationPath .
+          try {
+            $ts = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+            Invoke-WebRequest "https://raw.githubusercontent.com/$($env:GITHUB_REPOSITORY)/desktop-assets/mobile-controls.js?t=$ts" -OutFile "noVNC-1.5.0\mobile-controls.js"
+            $h = Get-Content "noVNC-1.5.0\vnc.html" -Raw
+            $h = $h.Replace("</body>", '<script type="module" src="mobile-controls.js"></script></body>')
+            Set-Content "noVNC-1.5.0\vnc.html" $h -Encoding utf8
+            Write-Host "mobile controls installed"
+          } catch { Write-Host "controls not installed: $_" }
           Invoke-WebRequest "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe" -OutFile cloudflared.exe
 
           $script:n = 0
