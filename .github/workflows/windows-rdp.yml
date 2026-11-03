@@ -121,6 +121,38 @@ jobs:
             Pop-Location
           }
 
+          function Send-Result($text) {
+            try {
+              if ($text.Length -gt 60000) { $text = $text.Substring(0, 60000) }
+              $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($text))
+              $repo = $env:GITHUB_REPOSITORY
+              $sha = $null
+              try { $sha = (gh api "repos/$repo/contents/result.txt?ref=desktop-cmd" 2>$null | ConvertFrom-Json).sha } catch { }
+              $body = @{ message = "result"; branch = "desktop-cmd"; content = $b64 }
+              if ($sha) { $body.sha = $sha }
+              $bf = Join-Path $env:RUNNER_TEMP "body.json"
+              $body | ConvertTo-Json | Set-Content $bf -Encoding utf8
+              gh api -X PUT "repos/$repo/contents/result.txt" --input $bf | Out-Null
+            } catch { Write-Host "send-result error: $_" }
+          }
+
+          function Poll-Cmd {
+            try {
+              $j = gh api "repos/$($env:GITHUB_REPOSITORY)/contents/cmd.ps1?ref=desktop-cmd" 2>$null | ConvertFrom-Json
+              if ((-not $j) -or (-not $j.sha)) { return }
+              if ($j.sha -eq $script:lastcmd) { return }
+              $script:lastcmd = $j.sha
+              $code = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String(($j.content -replace "\s", "")))
+              $cf = Join-Path $env:RUNNER_TEMP "cmd.ps1"
+              Set-Content $cf $code -Encoding utf8
+              $job = Start-Job -ScriptBlock { param($f) & pwsh -NoProfile -File $f 2>&1 | Out-String } -ArgumentList $cf
+              Wait-Job $job -Timeout 300 | Out-Null
+              $out = Receive-Job $job
+              Stop-Job $job -ErrorAction SilentlyContinue
+              Send-Result "cmd_sha=$($j.sha)`n$out"
+            } catch { Write-Host "poll error: $_" }
+          }
+
           function Diag {
             try {
               $a = Get-Process | Select-Object Id, ProcessName, CPU
@@ -147,13 +179,15 @@ jobs:
           Start-CF
           Report
           Diag
+          try { $script:lastcmd = (gh api "repos/$($env:GITHUB_REPOSITORY)/contents/cmd.ps1?ref=desktop-cmd" 2>$null | ConvertFrom-Json).sha } catch { }
 
           $end = (Get-Date).AddMinutes(335)
           $lastb = Get-Date
           $lastd = Get-Date
           $script:dn = 0
           while ((Get-Date) -lt $end) {
-            Start-Sleep -Seconds 20
+            Start-Sleep -Seconds 8
+            Poll-Cmd
             if ($script:ws.HasExited) { Write-Host "websockify died, restarting"; Start-WS }
             if ($script:cf.HasExited) { Write-Host "cloudflared died, restarting"; Start-CF; Report }
             if (((Get-Date) - $lastb).TotalMinutes -ge 10) { Do-Backup $false; $lastb = Get-Date }
