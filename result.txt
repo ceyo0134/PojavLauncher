@@ -1,0 +1,20 @@
+cmd_sha=0c2b637a8d116ff0b144557242d6be79b189b51e
+--- whoami
+runnervmnjgfq\runneradmin
+--- sessions
+ USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME
+>runneradmin           console             2  Active      none   11/3/2026 5:45 AM
+--- files
+
+[32;1mFullName[0m
+[32;1m--------[0m
+C:\Users\Public\Desktop\Epic Games Launcher.lnk
+C:\Users\Public\Desktop\Firefox.lnk
+C:\Users\Public\Desktop\Google Chrome.lnk
+C:\Users\Public\Desktop\hello.txt
+C:\Users\Public\Desktop\Microsoft Edge.lnk
+C:\Users\Public\Desktop\R 4.6.1.lnk
+C:\Users\Public\Desktop\Unity Hub.lnk
+C:\Users\runneradmin\Desktop\Kalici
+C:\Users\runneradmin\Desktop\hello.txt
+
