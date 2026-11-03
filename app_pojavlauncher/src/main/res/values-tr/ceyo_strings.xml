@@ -21,6 +21,6 @@
     <string name="ceyo_modrinth_mods">Mod İndir</string>
     <string name="ceyo_type_modpack">Modpack</string>
     <string name="ceyo_type_mod">Modlar</string>
-    <string name="ceyo_search_mods_hint">Modrinth'te mod ara</string>
+    <string name="ceyo_search_mods_hint">Modrinth\'te mod ara</string>
     <string name="ceyo_mod_installed">%1$s mods klasörüne indirildi</string>
 </resources>
