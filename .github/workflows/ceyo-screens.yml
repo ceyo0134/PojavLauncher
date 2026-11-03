@@ -46,13 +46,18 @@ jobs:
 
       - name: Fotograflari ceyo-screens dalina yukle
         if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
+          set -x
+          ls -la screens || { echo "screens klasoru yok"; exit 1; }
+          rm -rf /tmp/pub && mkdir /tmp/pub && cp -r screens/. /tmp/pub/
+          cd /tmp/pub
+          git init -q -b ceyo-screens
           git config user.name "github-actions"
           git config user.email "actions@users.noreply.github.com"
-          mkdir -p /tmp/s && cp -r screens/. /tmp/s/ 2>/dev/null || true
-          git checkout --orphan ceyo-screens-tmp
-          git rm -rf . -q || true
-          cp -r /tmp/s/. .
           git add -A
-          git commit -q -m "screens $(date -u +%H:%M:%S)"
-          git push -f origin HEAD:ceyo-screens
+          git commit -q -m "screens"
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+          git push -f origin ceyo-screens
