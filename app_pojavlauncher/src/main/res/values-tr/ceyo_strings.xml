@@ -23,4 +23,7 @@
     <string name="ceyo_type_mod">Modlar</string>
     <string name="ceyo_search_mods_hint">Modrinth\'te mod ara</string>
     <string name="ceyo_mod_installed">%1$s mods klasörüne indirildi</string>
+    <string name="ceyo_sec_game">Oyun</string>
+    <string name="ceyo_sec_advanced">Gelişmiş</string>
+    <string name="ceyo_sec_system">Sistem</string>
 </resources>

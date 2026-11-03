@@ -112,7 +112,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.ceyo.launcher"
+        applicationId "cylauncher.com"
         minSdkVersion 21
         targetSdkVersion 34
         versionCode getDateSeconds()
@@ -123,14 +123,13 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix '.debug'
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.customDebug
-            resValue 'string', 'application_package', 'com.ceyo.launcher.debug'
-            resValue 'string', 'storageProviderAuthorities', 'com.ceyo.launcher.scoped.gamefolder.debug'
-            resValue 'string', 'shareProviderAuthority', 'com.ceyo.launcher.scoped.controlfolder.debug'
+            resValue 'string', 'application_package', 'cylauncher.com'
+            resValue 'string', 'storageProviderAuthorities', 'cylauncher.com.scoped.gamefolder'
+            resValue 'string', 'shareProviderAuthority', 'cylauncher.com.scoped.controlfolder'
         }
         proguard {
             initWith debug
@@ -149,8 +148,8 @@ android {
             // defaultConfig already set
             // multiDexEnabled = true
             // debuggable = true
-            resValue 'string', 'storageProviderAuthorities', 'com.ceyo.launcher.scoped.gamefolder'
-            resValue 'string', 'application_package', 'com.ceyo.launcher'
+            resValue 'string', 'storageProviderAuthorities', 'cylauncher.com.scoped.gamefolder'
+            resValue 'string', 'application_package', 'cylauncher.com'
         }
         gplay {
             initWith release

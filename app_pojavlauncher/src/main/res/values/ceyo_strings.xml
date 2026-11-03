@@ -23,4 +23,7 @@
     <string name="ceyo_type_mod">Mods</string>
     <string name="ceyo_search_mods_hint">Search Modrinth mods</string>
     <string name="ceyo_mod_installed">%1$s downloaded to the mods folder</string>
+    <string name="ceyo_sec_game">Game</string>
+    <string name="ceyo_sec_advanced">Advanced</string>
+    <string name="ceyo_sec_system">System</string>
 </resources>
