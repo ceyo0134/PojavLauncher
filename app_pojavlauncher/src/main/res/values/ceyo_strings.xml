@@ -26,4 +26,13 @@
     <string name="ceyo_sec_game">Game</string>
     <string name="ceyo_sec_advanced">Advanced</string>
     <string name="ceyo_sec_system">System</string>
+    <string name="ceyo_pt_title">New profile</string>
+    <string name="ceyo_pt_subtitle">Pick what kind of game you want to play</string>
+    <string name="ceyo_pt_vanilla_sub">Plain Minecraft, no changes</string>
+    <string name="ceyo_pt_optifine_sub">Shaders and better performance</string>
+    <string name="ceyo_pt_fabric_sub">Light and fast mod loader</string>
+    <string name="ceyo_pt_quilt_sub">Fabric-compatible community loader</string>
+    <string name="ceyo_pt_forge_sub">The widest mod support</string>
+    <string name="ceyo_pt_modpack_sub">Ready-made packs from Modrinth / CurseForge</string>
+    <string name="ceyo_pt_bta_sub">Retro-style adventure version</string>
 </resources>

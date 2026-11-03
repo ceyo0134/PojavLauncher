@@ -26,4 +26,13 @@
     <string name="ceyo_sec_game">Oyun</string>
     <string name="ceyo_sec_advanced">Gelişmiş</string>
     <string name="ceyo_sec_system">Sistem</string>
+    <string name="ceyo_pt_title">Yeni profil</string>
+    <string name="ceyo_pt_subtitle">Nasıl bir oyun oynamak istediğini seç</string>
+    <string name="ceyo_pt_vanilla_sub">Saf Minecraft, değişiklik yok</string>
+    <string name="ceyo_pt_optifine_sub">Gölgeler ve daha iyi performans</string>
+    <string name="ceyo_pt_fabric_sub">Hafif ve hızlı mod yükleyici</string>
+    <string name="ceyo_pt_quilt_sub">Fabric uyumlu topluluk yükleyicisi</string>
+    <string name="ceyo_pt_forge_sub">En geniş mod desteği</string>
+    <string name="ceyo_pt_modpack_sub">Modrinth / CurseForge\'dan hazır paketler</string>
+    <string name="ceyo_pt_bta_sub">Retro tarzı macera sürümü</string>
 </resources>
