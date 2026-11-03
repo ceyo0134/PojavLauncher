@@ -30,6 +30,8 @@ import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
 public class SearchModFragment extends Fragment implements ModItemAdapter.SearchResultCallback {
 
     public static final String TAG = "SearchModFragment";
+    /** Bundle boolean: true ise dogrudan tek mod (Modrinth) aramasiyla acilir */
+    public static final String ARG_MODS_MODE = "ceyo_mods_mode";
     private View mOverlay;
     private float mOverlayTopCache; // Padding cache reduce resource lookup
 
@@ -47,6 +49,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
     private ProgressBar mSearchProgressBar;
     private TextView mStatusTextView;
     private ColorStateList mDefaultTextColor;
+    private TextView mChipModpack, mChipMod;
 
     private ModpackApi modpackApi;
 
@@ -77,6 +80,8 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         mRecyclerview = view.findViewById(R.id.search_mod_list);
         mStatusTextView = view.findViewById(R.id.search_mod_status_text);
         mFilterButton = view.findViewById(R.id.search_mod_filter);
+        mChipModpack = view.findViewById(R.id.search_mod_type_modpack);
+        mChipMod = view.findViewById(R.id.search_mod_type_mod);
 
         mDefaultTextColor = mStatusTextView.getTextColors();
 
@@ -100,7 +105,25 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         });
         mFilterButton.setOnClickListener(v -> displayFilterDialog());
 
+        mChipModpack.setOnClickListener(v -> setModsMode(false, true));
+        mChipMod.setOnClickListener(v -> setModsMode(true, true));
+        Bundle args = getArguments();
+        setModsMode(args != null && args.getBoolean(ARG_MODS_MODE, false), false);
+
         searchMods(null);
+    }
+
+    /** Modpack / tek mod aramasi arasinda gecis */
+    private void setModsMode(boolean mods, boolean runSearch) {
+        mSearchFilters.isModpack = !mods;
+        mChipModpack.setBackgroundResource(mods ? R.drawable.ceyo_chip_off : R.drawable.ceyo_chip_on);
+        mChipMod.setBackgroundResource(mods ? R.drawable.ceyo_chip_on : R.drawable.ceyo_chip_off);
+        mSearchEditText.setHint(mods ? R.string.ceyo_search_mods_hint : R.string.hint_search_modpack);
+        if(mods && (mSearchFilters.mcVersion == null || mSearchFilters.mcVersion.isEmpty())) {
+            // Secili profilin surumuyle uyumlu modlari varsayilan olarak goster
+            mSearchFilters.mcVersion = net.kdt.pojavlaunch.modloaders.modpacks.api.CyModTarget.current().mcVersion;
+        }
+        if(runSearch) searchMods(mSearchEditText.getText().toString());
     }
 
     @Override

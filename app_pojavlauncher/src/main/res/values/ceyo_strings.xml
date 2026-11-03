@@ -18,4 +18,9 @@
     <string name="ceyo_perm_skip">Skip for now</string>
     <string name="ceyo_hidden_hint">The folder is hidden (.minecraft). Enable \"show hidden files\" in your file manager.</string>
     <string name="ceyo_migrated">Your old game files were moved to Documents/.minecraft.</string>
+    <string name="ceyo_modrinth_mods">Download mods</string>
+    <string name="ceyo_type_modpack">Modpacks</string>
+    <string name="ceyo_type_mod">Mods</string>
+    <string name="ceyo_search_mods_hint">Search Modrinth mods</string>
+    <string name="ceyo_mod_installed">%1$s downloaded to the mods folder</string>
 </resources>

@@ -43,6 +43,8 @@ public class CommonApi implements ModpackApi {
 
         Future<?>[] futures = new Future<?>[mModpackApis.length];
         for(int i = 0; i < mModpackApis.length; i++) {
+            // Cy Launcher: tek mod aramasi sadece Modrinth'ten yapilir
+            if(!searchFilters.isModpack && mModpackApis[i] != mModrinthApi) continue;
             // If there is an array and its length is zero, this means that we've exhausted the results for this
             // search query and we don't need to actually do the search
             if(results[i] != null && results[i].results.length == 0) continue;

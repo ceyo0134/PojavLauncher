@@ -62,6 +62,38 @@
 
             />
 
+        <!-- Cy Launcher: Modpack / Mod secici -->
+        <LinearLayout
+            android:id="@+id/search_mod_type_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/search_mod_edittext"
+            app:layout_constraintStart_toStartOf="parent">
+            <TextView
+                android:id="@+id/search_mod_type_modpack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ceyo_chip_on"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:text="@string/ceyo_type_modpack"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/search_mod_type_mod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/ceyo_chip_off"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:text="@string/ceyo_type_mod"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+        </LinearLayout>
+
         <ProgressBar
             android:id="@+id/search_mod_progressbar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -69,7 +101,7 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/search_mod_edittext"
+            app:layout_constraintTop_toBottomOf="@+id/search_mod_type_row"
             tools:layout_editor_absoluteX="13dp" />
 
 

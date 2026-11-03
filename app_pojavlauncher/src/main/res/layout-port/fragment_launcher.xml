@@ -155,13 +155,22 @@
 				app:layout_constraintStart_toEndOf="@id/center_guideline"
 				app:layout_constraintEnd_toEndOf="parent" />
 			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/ceyo_modrinth_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:drawableStart="@drawable/ic_add_modded"
+				android:text="@string/ceyo_modrinth_mods"
+				app:layout_constraintTop_toBottomOf="@id/install_jar_button"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/center_guideline" />
+			<com.kdt.mcgui.LauncherMenuButton
 				android:id="@+id/share_logs_button"
 				style="@style/LauncherMenuButton.Universal"
 				android:layout_width="0dp"
 				android:drawableStart="@android:drawable/ic_menu_share"
 				android:text="@string/ceyo_share_logs"
 				app:layout_constraintTop_toBottomOf="@id/install_jar_button"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintStart_toEndOf="@id/center_guideline"
 				app:layout_constraintEnd_toEndOf="parent" />
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>

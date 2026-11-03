@@ -55,6 +55,22 @@ patch(JAVA / "fragments/MainMenuFragment.java", [
      "            net.kdt.pojavlaunch.CeyoStorage.openFolder(v.getContext(), getCurrentProfileDirectory());\n"),
 ])
 
+# ---- MainMenuFragment.java: Modrinth'ten mod indirme karti ----
+patch(JAVA / "fragments/MainMenuFragment.java", [
+    ("ceyo_modrinth_button",
+     "        mNewsButton.setOnLongClickListener((v)->{\n",
+     "        View mModrinthButton = view.findViewById(R.id.ceyo_modrinth_button);\n"
+     "        if(mModrinthButton != null) {\n"
+     "            // Dogrudan Modrinth tek mod aramasi (secili profilin mods klasorune indirir)\n"
+     "            mModrinthButton.setOnClickListener(v -> {\n"
+     "                Bundle modsArgs = new Bundle();\n"
+     "                modsArgs.putBoolean(SearchModFragment.ARG_MODS_MODE, true);\n"
+     "                Tools.swapFragment(requireActivity(), SearchModFragment.class, SearchModFragment.TAG, modsArgs);\n"
+     "            });\n"
+     "        }\n\n"
+     "        mNewsButton.setOnLongClickListener((v)->{\n"),
+])
+
 # ---- TestStorageActivity.java: izin akisi + tasima ----
 patch(JAVA / "TestStorageActivity.java", [
     ("mAllFilesState",
@@ -107,8 +123,8 @@ RES = ROOT / "app_pojavlauncher/src/main/res"
 changed = 0
 for f in RES.glob("values*/strings.xml"):
     t = f.read_text(encoding="utf-8")
-    n = re.sub(r'(<string name="app_name"[^>]*>)[^<]*(</string>)', r'\g<1>CyLauncher\g<2>', t)
-    n = re.sub(r'(<string name="app_short_name"[^>]*>)[^<]*(</string>)', r'\g<1>CyLauncher\g<2>', n)
+    n = re.sub(r'(<string name="app_name"[^>]*>)[^<]*(</string>)', r'\g<1>Cy Launcher\g<2>', t)
+    n = re.sub(r'(<string name="app_short_name"[^>]*>)[^<]*(</string>)', r'\g<1>Cy Launcher\g<2>', n)
     if n != t:
         f.write_text(n, encoding="utf-8"); changed += 1
 print(f"  [ok]   uygulama adi {changed} dil dosyasinda guncellendi")

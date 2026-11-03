@@ -1,6 +1,9 @@
 package net.kdt.pojavlaunch.modloaders.modpacks.api;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.kdt.mcgui.ProgressLayout;
 
@@ -13,16 +16,24 @@ import net.kdt.pojavlaunch.modloaders.modpacks.models.ModrinthIndex;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchFilters;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchResult;
 import net.kdt.pojavlaunch.progresskeeper.DownloaderProgressWrapper;
+import net.kdt.pojavlaunch.utils.DownloadUtils;
 import net.kdt.pojavlaunch.utils.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipFile;
 
 public class ModrinthApi implements ModpackApi{
     private final ApiHandler mApiHandler;
+    /** Cy Launcher: surum dosyasi url'si -> o surumun gerekli (required) bagimlilik proje id'leri */
+    private final Map<String, List<String>> mRequiredDependencies = new ConcurrentHashMap<>();
     public ModrinthApi(){
         mApiHandler = new ApiHandler("https://api.modrinth.com/v2");
     }
@@ -48,6 +59,18 @@ public class ModrinthApi implements ModpackApi{
         facetString.append(String.format("[\"project_type:%s\"]", searchFilters.isModpack ? "modpack" : "mod"));
         if(searchFilters.mcVersion != null && !searchFilters.mcVersion.isEmpty())
             facetString.append(String.format(",[\"versions:%s\"]", searchFilters.mcVersion));
+        if(!searchFilters.isModpack) {
+            // Cy Launcher: secili profilin mod yukleyicisine (Fabric/Forge/...) uyan modlari goster
+            String[] loaders = CyModTarget.current().loaders;
+            if(loaders != null) {
+                facetString.append(",[");
+                for(int i = 0; i < loaders.length; i++) {
+                    if(i > 0) facetString.append(",");
+                    facetString.append("\"categories:").append(loaders[i]).append("\"");
+                }
+                facetString.append("]");
+            }
+        }
         facetString.append("]");
         params.put("facets", facetString.toString());
         params.put("query", searchFilters.name);
@@ -69,8 +92,8 @@ public class ModrinthApi implements ModpackApi{
                     hit.get("project_type").getAsString().equals("modpack"),
                     hit.get("project_id").getAsString(),
                     hit.get("title").getAsString(),
-                    hit.get("description").getAsString(),
-                    hit.get("icon_url").getAsString()
+                    optString(hit, "description"),
+                    optString(hit, "icon_url") // ikonu olmayan modlarda null patlamasin
             );
         }
         if(modrinthSearchResult == null) modrinthSearchResult = new ModrinthSearchResult();
@@ -82,38 +105,162 @@ public class ModrinthApi implements ModpackApi{
 
     @Override
     public ModDetail getModDetails(ModItem item) {
-
-        JsonArray response = mApiHandler.get(String.format("project/%s/version", item.id), JsonArray.class);
+        // Tek mod ise secili profilin MC surumu + loader'ina gore filtrele; sonuc bos cikarsa filtresiz listeye don
+        CyModTarget target = item.isModpack ? null : CyModTarget.current();
+        JsonArray response = null;
+        if(target != null && target.hasFilter()) {
+            response = fetchVersions(item.id, target);
+        }
+        if(response == null || response.size() == 0) {
+            response = mApiHandler.get(String.format("project/%s/version", item.id), JsonArray.class);
+        }
         if(response == null) return null;
-        System.out.println(response);
-        String[] names = new String[response.size()];
-        String[] mcNames = new String[response.size()];
-        String[] urls = new String[response.size()];
-        String[] hashes = new String[response.size()];
+
+        List<String> names = new ArrayList<>();
+        List<String> mcNames = new ArrayList<>();
+        List<String> urls = new ArrayList<>();
+        List<String> hashes = new ArrayList<>();
 
         for (int i=0; i<response.size(); ++i) {
             JsonObject version = response.get(i).getAsJsonObject();
-            names[i] = version.get("name").getAsString();
-            mcNames[i] = version.get("game_versions").getAsJsonArray().get(0).getAsString();
-            urls[i] = version.get("files").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString();
+            JsonObject file = pickPrimaryFile(version);
+            if(file == null) continue; // dosyasi olmayan surumu atla
+
+            String url = file.get("url").getAsString();
+            names.add(version.get("name").getAsString());
+            mcNames.add(pickMcVersion(version, target));
+            urls.add(url);
+
             // Assume there may not be hashes, in case the API changes
-            JsonObject hashesMap = version.getAsJsonArray("files").get(0).getAsJsonObject()
-                    .get("hashes").getAsJsonObject();
-            if(hashesMap == null || hashesMap.get("sha1") == null){
-                hashes[i] = null;
-                continue;
-            }
+            JsonObject hashesMap = file.has("hashes") && file.get("hashes").isJsonObject()
+                    ? file.getAsJsonObject("hashes") : null;
+            hashes.add(hashesMap == null || hashesMap.get("sha1") == null ? null : hashesMap.get("sha1").getAsString());
 
-            hashes[i] = hashesMap.get("sha1").getAsString();
+            if(!item.isModpack) rememberRequiredDependencies(url, version);
         }
+        if(names.isEmpty()) return null;
 
-        return new ModDetail(item, names, mcNames, urls, hashes);
+        return new ModDetail(item, names.toArray(new String[0]), mcNames.toArray(new String[0]),
+                urls.toArray(new String[0]), hashes.toArray(new String[0]));
     }
 
     @Override
     public ModLoader installMod(ModDetail modDetail, int selectedVersion) throws IOException{
-        //TODO considering only modpacks for now
+        if(!modDetail.isModpack) {
+            installSingleMod(modDetail, selectedVersion);
+            return null; // modpack degil: ayri bir modloader kurulumu yok
+        }
         return ModpackInstaller.installModpack(modDetail, selectedVersion, this::installMrpack);
+    }
+
+    // ---------------------------------------------------------------- Cy Launcher: tek mod indirme
+
+    private JsonArray fetchVersions(String projectId, CyModTarget target) {
+        HashMap<String, Object> params = new HashMap<>();
+        if(target.mcVersionJson() != null) params.put("game_versions", target.mcVersionJson());
+        if(target.loadersJson() != null) params.put("loaders", target.loadersJson());
+        return mApiHandler.get(String.format("project/%s/version", projectId), params, JsonArray.class);
+    }
+
+    /** primary:true olan dosyayi, yoksa ilk dosyayi dondurur */
+    private static JsonObject pickPrimaryFile(JsonObject version) {
+        JsonArray files = version.getAsJsonArray("files");
+        if(files == null || files.size() == 0) return null;
+        for(JsonElement element : files) {
+            JsonObject file = element.getAsJsonObject();
+            JsonElement primary = file.get("primary");
+            if(primary != null && primary.isJsonPrimitive() && primary.getAsBoolean()) return file;
+        }
+        return files.get(0).getAsJsonObject();
+    }
+
+    private static String pickMcVersion(JsonObject version, CyModTarget target) {
+        JsonArray gameVersions = version.getAsJsonArray("game_versions");
+        if(gameVersions == null || gameVersions.size() == 0) return "?";
+        if(target != null && target.mcVersion != null) {
+            for(JsonElement element : gameVersions) {
+                if(element.getAsString().equals(target.mcVersion)) return target.mcVersion;
+            }
+        }
+        return gameVersions.get(0).getAsString();
+    }
+
+    private void rememberRequiredDependencies(String versionUrl, JsonObject version) {
+        JsonArray dependencies = version.getAsJsonArray("dependencies");
+        if(dependencies == null) return;
+        List<String> required = new ArrayList<>();
+        for(JsonElement element : dependencies) {
+            JsonObject dependency = element.getAsJsonObject();
+            JsonElement type = dependency.get("dependency_type");
+            JsonElement projectId = dependency.get("project_id");
+            if(type == null || projectId == null || projectId.isJsonNull()) continue;
+            if("required".equals(type.getAsString())) required.add(projectId.getAsString());
+        }
+        if(!required.isEmpty()) mRequiredDependencies.put(versionUrl, required);
+    }
+
+    private void installSingleMod(ModDetail modDetail, int selectedVersion) throws IOException {
+        CyModTarget target = CyModTarget.current();
+        File modsDir = target.modsDir;
+        if(!modsDir.isDirectory() && !modsDir.mkdirs()) {
+            throw new IOException("mods klasoru olusturulamadi: " + modsDir);
+        }
+        String url = modDetail.versionUrls[selectedVersion];
+        try {
+            downloadModFile(url, modDetail.versionHashes[selectedVersion], modsDir);
+
+            // Gerekli bagimliliklar (ornegin Fabric API) - basarisiz olursa asil indirmeyi bozmasin
+            List<String> dependencies = mRequiredDependencies.get(url);
+            if(dependencies != null) {
+                for(String projectId : dependencies) {
+                    try {
+                        installDependency(projectId, target, modsDir);
+                    } catch (Exception e) {
+                        Log.w("ModrinthApi", "Bagimlilik indirilemedi: " + projectId, e);
+                    }
+                }
+            }
+        } finally {
+            ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
+        }
+    }
+
+    private void installDependency(String projectId, CyModTarget target, File modsDir) throws IOException {
+        JsonArray versions = target.hasFilter() ? fetchVersions(projectId, target) : null;
+        if(versions == null || versions.size() == 0) return; // uyumlu surum yoksa tahmin yurutme
+        JsonObject version = versions.get(0).getAsJsonObject(); // en yeni uyumlu surum
+        JsonObject file = pickPrimaryFile(version);
+        if(file == null) return;
+        JsonObject hashes = file.has("hashes") && file.get("hashes").isJsonObject() ? file.getAsJsonObject("hashes") : null;
+        String sha1 = hashes != null && hashes.get("sha1") != null ? hashes.get("sha1").getAsString() : null;
+        downloadModFile(file.get("url").getAsString(), sha1, modsDir);
+    }
+
+    private static void downloadModFile(String url, String sha1, File modsDir) throws IOException {
+        File destination = new File(modsDir, fileNameFromUrl(url));
+        byte[] buffer = new byte[8192];
+        DownloadUtils.ensureSha1(destination, sha1, (Callable<Void>) () -> {
+            DownloadUtils.downloadFileMonitored(url, destination, buffer,
+                    new DownloaderProgressWrapper(R.string.modpack_download_downloading_mods,
+                            ProgressLayout.INSTALL_MODPACK));
+            return null;
+        });
+    }
+
+    private static String fileNameFromUrl(String url) {
+        String name = url.substring(url.lastIndexOf('/') + 1);
+        int query = name.indexOf('?');
+        if(query >= 0) name = name.substring(0, query);
+        try {
+            name = URLDecoder.decode(name.replace("+", "%2B"), "UTF-8");
+        } catch (Exception ignored) {}
+        name = name.replaceAll("[\\\\/:*?\"<>|]", "_").trim();
+        return name.isEmpty() ? "mod.jar" : name;
+    }
+
+    private static String optString(JsonObject object, String key) {
+        JsonElement element = object.get(key);
+        return element == null || element.isJsonNull() ? "" : element.getAsString();
     }
 
     private static ModLoader createInfo(ModrinthIndex modrinthIndex) {

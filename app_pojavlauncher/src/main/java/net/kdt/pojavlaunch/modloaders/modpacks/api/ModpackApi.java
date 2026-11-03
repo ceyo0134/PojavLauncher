@@ -2,6 +2,7 @@ package net.kdt.pojavlaunch.modloaders.modpacks.api;
 
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.kdt.mcgui.ProgressLayout;
 
@@ -54,7 +55,12 @@ public interface ModpackApi {
         PojavApplication.sExecutorService.execute(() -> {
             try {
                 ModLoader loaderInfo = installMod(modDetail, selectedVersion);
-                if (loaderInfo == null) return;
+                if (loaderInfo == null) {
+                    // Cy Launcher: tek mod indirildi (modpack degil)
+                    if(!modDetail.isModpack) Tools.runOnUiThread(() -> Toast.makeText(context,
+                            context.getString(R.string.ceyo_mod_installed, modDetail.title), Toast.LENGTH_LONG).show());
+                    return;
+                }
                 loaderInfo.getDownloadTask(new NotificationDownloadListener(context, loaderInfo)).run();
             }catch (IOException e) {
                 Tools.showErrorRemote(context, R.string.modpack_install_download_failed, e);
