@@ -6,6 +6,7 @@ on:
 permissions:
   contents: write
   actions: write
+  pages: write
 
 jobs:
   desktop:
@@ -105,12 +106,14 @@ jobs:
               Set-Location linkrepo
               "$link`n$local $pub $vnc" | Out-File link.txt -Encoding ascii
               "# Windows desktop`n`n[OPEN DESKTOP]($link)`n`nUpdated: $(Get-Date -Format u)" | Out-File README.md -Encoding ascii
+              ('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Desktop</title><script>location.replace("' + $link + '")</script><p><a href="' + $link + '">Open desktop</a></p>') | Out-File index.html -Encoding ascii
               git init -q
               git config user.email "bot@users.noreply.github.com"
               git config user.name "bot"
-              git add link.txt README.md
+              git add link.txt README.md index.html
               git commit -q -m "link"
               git push -q -f "https://x-access-token:$($env:GH_TOKEN)@github.com/$($env:GITHUB_REPOSITORY).git" HEAD:refs/heads/desktop-link
+              gh api -X POST "repos/$($env:GITHUB_REPOSITORY)/pages/builds" | Out-Null
             } catch { Write-Host $_ }
             Pop-Location
           }
