@@ -4,30 +4,49 @@ on:
   workflow_dispatch:
 
 jobs:
-  rdp:
+  desktop:
     runs-on: windows-2022
     timeout-minutes: 125
     steps:
-      - name: Enable RDP and set password
+      - name: Install TightVNC
         shell: pwsh
         env:
-          RDP_PASSWORD: ${{ secrets.RDP_PASSWORD }}
+          VNC_PASSWORD: ${{ secrets.VNC_PASSWORD }}
         run: |
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
-          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
-          Set-LocalUser -Name runneradmin -Password (ConvertTo-SecureString $env:RDP_PASSWORD -AsPlainText -Force)
+          Invoke-WebRequest "https://www.tightvnc.com/download/2.8.81/tightvnc-2.8.81-gpl-setup-64bit.msi" -OutFile tvnc.msi
+          $p = $env:VNC_PASSWORD
+          Start-Process msiexec.exe -Wait -ArgumentList "/i tvnc.msi /quiet /norestart ADDLOCAL=Server SET_USEVNCAUTHENTICATION=1 VALUE_OF_USEVNCAUTHENTICATION=1 SET_PASSWORD=1 VALUE_OF_PASSWORD=$p SET_USECONTROLAUTHENTICATION=1 VALUE_OF_USECONTROLAUTHENTICATION=1 SET_CONTROLPASSWORD=1 VALUE_OF_CONTROLPASSWORD=$p"
+          Start-Sleep -Seconds 5
+          Get-Service | Where-Object { $_.Name -like "tvnserver*" }
+          netstat -ano | findstr ":5900"
 
-      - name: Connect to Tailscale
-        uses: tailscale/github-action@v2
-        with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          hostname: gh-windows
+      - name: Start noVNC
+        shell: pwsh
+        run: |
+          pip install websockify
+          Invoke-WebRequest "https://github.com/novnc/noVNC/archive/refs/tags/v1.5.0.zip" -OutFile novnc.zip
+          Expand-Archive novnc.zip -DestinationPath .
+          Start-Process python -ArgumentList "-m websockify --web noVNC-1.5.0 6080 127.0.0.1:5900" -RedirectStandardError ws.err -RedirectStandardOutput ws.out
+          Start-Sleep -Seconds 5
+
+      - name: Start Cloudflare tunnel
+        shell: pwsh
+        run: |
+          Invoke-WebRequest "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe" -OutFile cloudflared.exe
+          Start-Process .\cloudflared.exe -ArgumentList "tunnel --url http://127.0.0.1:6080 --no-autoupdate" -RedirectStandardError cf.err -RedirectStandardOutput cf.out
+          $url = $null
+          for ($i=0; $i -lt 40 -and -not $url; $i++) {
+            Start-Sleep -Seconds 3
+            $m = Select-String -Path cf.err -Pattern "https://[a-z0-9-]+\.trycloudflare\.com" -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($m) { $url = $m.Matches[0].Value }
+          }
+          Write-Host "=============================================="
+          Write-Host "LINK: $url/vnc.html?autoconnect=true&resize=scale"
+          Write-Host "=============================================="
+          "### Desktop link`n$url/vnc.html?autoconnect=true&resize=scale" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
       - name: Keep alive for 2 hours
         shell: pwsh
         run: |
-          tailscale ip -4
-          Write-Host "RDP ready. User: runneradmin. Closing in 2 hours."
-          $end = (Get-Date).AddMinutes(120)
+          $end = (Get-Date).AddMinutes(118)
           while ((Get-Date) -lt $end) { Start-Sleep -Seconds 30 }
