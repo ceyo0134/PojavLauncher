@@ -53,12 +53,14 @@
 
             <TextView
                 android:id="@+id/vprof_editor_profile_name_sub"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/profiles_profile_name"
                 android:textColor="@color/ceyo_accent" android:textSize="12sp" android:textStyle="bold" android:layout_marginTop="14dp" android:layout_marginBottom="6dp" android:layout_marginStart="4dp" />
             <EditText
                 android:id="@+id/vprof_editor_profile_name"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_line"
