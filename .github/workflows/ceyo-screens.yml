@@ -1,0 +1,58 @@
+name: Ceyo Screens
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ cy-modrinth ]
+    paths: [ 'scripts/screens-trigger.txt' ]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  shots:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Son basarili APK'yi indir
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RID=$(gh run list --workflow ceyo-build.yml --branch cy-modrinth --status success --limit 1 --json databaseId -q '.[0].databaseId')
+          echo "APK run: $RID"
+          gh run download "$RID" -n CeyoLauncher-apk -D apk
+          ls -la apk
+          echo "ABI'ler:"; unzip -l apk/CeyoLauncher-debug.apk | awk '{print $4}' | grep '^lib/' | cut -d/ -f2 | sort -u
+
+      - name: Emulator'de calistir
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: python3 scripts/ceyo_screens.py
+
+      - name: Fotograflari ceyo-screens dalina yukle
+        if: always()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@users.noreply.github.com"
+          mkdir -p /tmp/s && cp -r screens/. /tmp/s/ 2>/dev/null || true
+          git checkout --orphan ceyo-screens-tmp
+          git rm -rf . -q || true
+          cp -r /tmp/s/. .
+          git add -A
+          git commit -q -m "screens $(date -u +%H:%M:%S)"
+          git push -f origin HEAD:ceyo-screens
