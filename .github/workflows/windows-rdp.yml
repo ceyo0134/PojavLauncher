@@ -32,6 +32,24 @@ jobs:
           try { Set-MpPreference -DisableRealtimeMonitoring $true } catch { Write-Host "defender: $_" }
           try { powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c } catch { }
 
+      - name: Tailscale (optional, runs only if TS_AUTHKEY secret exists)
+        shell: pwsh
+        continue-on-error: true
+        env:
+          TS_AUTHKEY: ${{ secrets.TS_AUTHKEY }}
+        run: |
+          if (-not $env:TS_AUTHKEY) { Write-Host "TS_AUTHKEY yok, Tailscale atlandi"; exit 0 }
+          Invoke-WebRequest "https://pkgs.tailscale.com/stable/tailscale-setup-latest-amd64.msi" -OutFile ts.msi
+          Start-Process msiexec.exe -Wait -ArgumentList "/i ts.msi /quiet /norestart"
+          Start-Sleep -Seconds 5
+          $ts = "C:\Program Files\Tailscale\tailscale.exe"
+          & $ts up --authkey=$env:TS_AUTHKEY --hostname=gh-desktop --unattended
+          Start-Sleep -Seconds 3
+          $ip = (& $ts ip -4 | Select-Object -First 1)
+          New-NetFirewallRule -DisplayName "vnc5900" -Direction Inbound -Protocol TCP -LocalPort 5900 -Action Allow | Out-Null
+          "TS_IP=$ip" | Out-File $env:GITHUB_ENV -Append -Encoding utf8
+          Write-Host "::notice title=tailscale::$($ip):5900"
+
       - name: Run desktop (noVNC + tunnel + backups, stays alive)
         shell: pwsh
         run: |
@@ -86,7 +104,7 @@ jobs:
           function Start-CF {
             $script:n++
             $err = "cf$($script:n).err"
-            $script:cf = Start-Process .\cloudflared.exe -ArgumentList "tunnel --url http://127.0.0.1:6080 --no-autoupdate" -RedirectStandardError $err -RedirectStandardOutput "cf$($script:n).out" -PassThru -WindowStyle Hidden
+            $script:cf = Start-Process .\cloudflared.exe -ArgumentList "tunnel --url http://127.0.0.1:6080 --no-autoupdate --protocol http2" -RedirectStandardError $err -RedirectStandardOutput "cf$($script:n).out" -PassThru -WindowStyle Hidden
             $script:url = $null
             for ($i = 0; $i -lt 40 -and -not $script:url; $i++) {
               Start-Sleep -Seconds 3
@@ -107,7 +125,7 @@ jobs:
               Push-Location $env:RUNNER_TEMP
               New-Item -ItemType Directory -Path linkrepo -Force | Out-Null
               Set-Location linkrepo
-              "$link`n$local $pub $vnc" | Out-File link.txt -Encoding ascii
+              "$link`n$local $pub $vnc`nTAILSCALE: $($env:TS_IP):5900" | Out-File link.txt -Encoding ascii
               "# Windows desktop`n`n[OPEN DESKTOP]($link)`n`nUpdated: $(Get-Date -Format u)" | Out-File README.md -Encoding ascii
               ('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Desktop</title><script>location.replace("' + $link + '")</script><p><a href="' + $link + '">Open desktop</a></p>') | Out-File index.html -Encoding ascii
               git init -q
