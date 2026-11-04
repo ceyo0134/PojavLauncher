@@ -1,6 +1,39 @@
-cmd_sha=74bfe2d101a0286ba38d3f4a9c8f73b960ce72ec
-ParserError: D:\a\_temp\cmd.ps1:11
-Line |
-  11 |  . rocessName; Pct=[math]::Round(($p.CPU-$o.CPU)/5*100,0)} } } | sort Pc .
-     |                                                                ~
-     | An empty pipe element is not allowed.
+cmd_sha=019ca7684fd1c5d3efad856a6988480249d0b6d8
+--- tailscale status
+100.70.53.93     gh-desktop    azrail.enver001@  windows  -  
+100.106.166.105  tecno-pova-5  azrail.enver001@  android  -  
+
+--- netcheck
+2026/11/04 05:06:17 portmap: monitor: gateway and self IP changed: gw=10.1.0.1 self=10.1.0.4
+
+Report:
+	* Time: 2026-11-04 05:06:18.1815412Z
+	* UDP: true
+	* IPv4: yes, 132.196.80.128:11266
+	* IPv6: no, but OS has support
+	* MappingVariesByDestIP: false
+	* PortMapping: 
+	* Nearest DERP: Chicago
+	* DERP latency:
+		- ord: 10.4ms  (Chicago)
+
+--- vnc connections
+  TCP    0.0.0.0:5900           0.0.0.0:0              LISTENING       6064
+
+--- top cpu 5s
+pwsh=2%, cloudflared=1%, svchost=0%, svchost=0%, svchost=0%, svchost=0%, svchost=0%, svchost=0%
+--- tvnserver reg
+
+UseControlAuthentication : 1
+UseVncAuthentication     : 1
+ControlPassword          : {231, 126, 154, 25.}
+Password                 : {231, 126, 154, 25.}
+AllowLoopback            : 1
+PollingInterval          : 100
+PSPath                   : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\TightVNC\Server
+PSParentPath             : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\TightVNC
+PSChildName              : Server
+PSDrive                  : HKLM
+PSProvider               : Microsoft.PowerShell.Core\Registry
+
+
