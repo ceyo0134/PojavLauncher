@@ -26,7 +26,7 @@ jobs:
           Start-Process msiexec.exe -Wait -ArgumentList "/i tvnc.msi /quiet /norestart ADDLOCAL=Server SET_USEVNCAUTHENTICATION=1 VALUE_OF_USEVNCAUTHENTICATION=1 SET_PASSWORD=1 VALUE_OF_PASSWORD=$p SET_USECONTROLAUTHENTICATION=1 VALUE_OF_USECONTROLAUTHENTICATION=1 SET_CONTROLPASSWORD=1 VALUE_OF_CONTROLPASSWORD=$p"
           Start-Sleep -Seconds 5
           New-ItemProperty -Path "HKLM:\SOFTWARE\TightVNC\Server" -Name AllowLoopback -PropertyType DWord -Value 1 -Force | Out-Null
-          New-ItemProperty -Path "HKLM:\SOFTWARE\TightVNC\Server" -Name PollingInterval -PropertyType DWord -Value 30 -Force | Out-Null
+          New-ItemProperty -Path "HKLM:\SOFTWARE\TightVNC\Server" -Name PollingInterval -PropertyType DWord -Value 100 -Force | Out-Null
           Restart-Service tvnserver
           Start-Sleep -Seconds 5
           try { Set-MpPreference -DisableRealtimeMonitoring $true } catch { Write-Host "defender: $_" }
@@ -100,7 +100,7 @@ jobs:
             $local = try { (Invoke-WebRequest "http://127.0.0.1:6080/vnc.html" -UseBasicParsing -TimeoutSec 10).StatusCode } catch { $_.Exception.Message }
             $pub = try { (Invoke-WebRequest "$($script:url)/vnc.html" -UseBasicParsing -TimeoutSec 15).StatusCode } catch { $_.Exception.Message }
             $vnc = (netstat -ano | findstr ":5900" | Select-Object -First 2) -join " | "
-            $link = "$($script:url)/vnc.html?autoconnect=true&resize=scale&quality=4&compression=6"
+            $link = "$($script:url)/vnc.html?autoconnect=true&resize=scale&quality=6&compression=9"
             Write-Host "LINK: $link"
             Write-Host "::notice title=link::$link"
             try {
