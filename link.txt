@@ -1,0 +1,3 @@
+https://defendant-stanford-run-introduce.trycloudflare.com/vnc.html?autoconnect=true&resize=scale&quality=6&compression=9
+200 200   TCP    0.0.0.0:5900           0.0.0.0:0              LISTENING       5196
+TAILSCALE: 100.121.71.116:5900
