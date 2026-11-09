@@ -1,2 +1,4 @@
-cmd_sha=30a25b4d4b5cec22e7ee62050fb0af01684cc968
-ffmpeg install started
+cmd_sha=c72d6f7b11a5f55f01bd9115002a1fab6f0aac3c
+ffmpeg at: C:\ProgramData\Chocolatey\bin\ffmpeg.exe
+FFDONE
+True
