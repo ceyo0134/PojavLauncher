@@ -1,4 +1,3 @@
-# 1794208061.685865
-Get-Content C:\rvc\tts_boot.log -ErrorAction SilentlyContinue | Where-Object { $_ -match '^STEP|^UP|^DONE|GH_REPO|rror|fatal' } | Select-Object -Last 10
-if(Test-Path C:\rvc\TTS_URL.txt){'TTS_URL: '+(Get-Content C:\rvc\TTS_URL.txt)}
-'--- tts.err'; Get-Content C:\rvc\tts.err -Tail 5 -ErrorAction SilentlyContinue | ForEach-Object { $_.Substring(0,[Math]::Min($_.Length,160)) }
+# 1794208105.4553661
+$body=@{data=@('Merhaba, bu bir deneme.','Ahmet (erkek)',0);fn_index=0}|ConvertTo-Json -Compress
+try{ $r=Invoke-RestMethod -Uri http://127.0.0.1:7870/run/predict -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 240; ($r|ConvertTo-Json -Depth 5 -Compress).Substring(0,[Math]::Min(700,($r|ConvertTo-Json -Depth 5 -Compress).Length)) }catch{ 'ERR: '+$_.Exception.Message }
