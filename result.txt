@@ -1,5 +1,2 @@
-cmd_sha=75b446afc88b4b12dda46dd376a7fc7d4a1151e7
-URL: https://grain-place-them-holly.trycloudflare.com
-tunnel -> 200
-local -> 200
-model: PorcayV2_e300_s3600.pth
+cmd_sha=0989fe288319c73c620b151c61949730051890c3
+tts bootstrap started
