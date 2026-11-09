@@ -1,0 +1,3 @@
+https://micro-spotlight-processing-coupons.trycloudflare.com/vnc.html?autoconnect=true&resize=scale&quality=6&compression=9
+200 200   TCP    0.0.0.0:5900           0.0.0.0:0              LISTENING       7672
+TAILSCALE: 100.111.110.78:5900
