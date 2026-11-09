@@ -1,9 +1,5 @@
-cmd_sha=f29628d59b4eb40fc774e03e8328b1aad73e9662
-  TCP    0.0.0.0:7865           0.0.0.0:0              LISTENING       5492
-  TCP    0.0.0.0:7866           0.0.0.0:0              LISTENING       7276
-7865 -> 200
-7866 -> 200
-5372 "C:\hostedtoolcache\windows\Python\3.12.10\x64\python.exe" -m websockify --web noVNC-1.5.0 6080 127.0.0.1:5900
-2712 "C:\rvc\venv\Scripts\python.exe" webui.py --noautoopen --port 7865
-5492 "C:\hostedtoolcache\windows\Python\3.12.10\x64\python.exe" webui.py --noautoopen --port 7865
-7276 "C:\hostedtoolcache\windows\Python\3.12.10\x64\python.exe" webui.py --noautoopen --port 7865
+cmd_sha=75b446afc88b4b12dda46dd376a7fc7d4a1151e7
+URL: https://grain-place-them-holly.trycloudflare.com
+tunnel -> 200
+local -> 200
+model: PorcayV2_e300_s3600.pth
