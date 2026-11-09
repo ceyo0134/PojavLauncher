@@ -1,2 +1,7 @@
-cmd_sha=7583f29f2aa57fede393f0e5854e49500289876d
-bootstrap started
+cmd_sha=adc5b684612f0fa380300dfd8526b42c7f52a094
+     | This command cannot be run due to the error: The system cannot find the file specified.
+     | This command cannot be run due to the error: The system cannot find the file specified.
+PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
+PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
+PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
+procs: 1
