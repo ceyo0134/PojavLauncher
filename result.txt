@@ -1,2 +1,16 @@
-cmd_sha=0989fe288319c73c620b151c61949730051890c3
-tts bootstrap started
+cmd_sha=743b0e00cfd464ac7cc6924ef1ac60e9f7ac97d7
+STEP pull
+STEP pip
+STEP start
+GH_REPO=ceyo0134/PojavLauncher token_set=True
+PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
+UP
+STEP tunnel
+DONE
+TTS_URL: https://launches-alot-semi-agent.trycloudflare.com
+--- tts.err
+  import pkg_resources
+C:\rvc\app\infer\vc\modules.py:174: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pick
+  self.cpt = torch.load(person, map_location="cpu")
+C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\torch\nn\utils\weight_norm.py:134: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in 
+  WeightNorm.apply(module, name, dim)
