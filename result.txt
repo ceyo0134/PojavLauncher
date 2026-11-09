@@ -1,7 +1,51 @@
-cmd_sha=adc5b684612f0fa380300dfd8526b42c7f52a094
-     | This command cannot be run due to the error: The system cannot find the file specified.
-     | This command cannot be run due to the error: The system cannot find the file specified.
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-procs: 1
+cmd_sha=7c99f2175a48569826e7b98819d5e51618215d90
+**********************
+PowerShell transcript start
+Start time: 20261109065038
+Username: runnervmquqza\runneradmin
+RunAs User: runnervmquqza\runneradmin
+Configuration Name: 
+Machine: runnervmquqza (Microsoft Windows NT 10.0.20348.0)
+Host Application: C:\Program Files\PowerShell\7\pwsh.dll -NoProfile -ExecutionPolicy Bypass -File C:\rvc_boot.ps1
+Process ID: 6364
+PSVersion: 7.6.9
+PSEdition: Core
+GitCommitId: 7.6.9
+OS: Microsoft Windows 10.0.20348
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.4
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+STEP python
+
+STEP clone
+Cloning into 'app'...
+remote: Enumerating objects: 314, done.
+remote: Counting objects: 100% (314/314), done.
+remote: Compressing objects: 100% (271/271), done.
+remote: Total 314 (delta 46), reused 254 (delta 31), pack-reused 0 (from 0)
+Receiving objects: 100% (314/314), 49.41 MiB | 65.12 MiB/s, done.
+Resolving deltas: 100% (46/46), done.
+STEP venv
+&: C:\rvc_boot.ps1:11
+Line |
+  11 |  & $py -m venv "$d\venv"
+     |    ~~~
+     | The term 'C:\Program Files\Python312\python.exe' is not recognized as a name of a cmdlet, function, script file, or executable program. Check the spelling of the n
+&: C:\rvc_boot.ps1:11
+Line |
+  11 |  & $py -m venv "$d\venv"
+     |    ~~~
+     | The term 'C:\Program Files\Python312\python.exe' is not recognized as a name of a cmdlet, function, script file,
+     | or executable program. Check the spelling of the name, or if a path was included, verify that the path is
+     | correct and try again.
+
+&: C:\rvc_boot.ps1:13
+Line |
+--- py:
+False
+C:\hostedtoolcache\windows\Python\3.12.10\x64\python.exe
+C:\Windows\py.exe
+Python 3.12.10
