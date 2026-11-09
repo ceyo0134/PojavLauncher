@@ -1,6 +1,3 @@
-# 1794208325.569537
-$real=Get-ChildItem 'C:\ProgramData\chocolatey\lib\ffmpeg' -Recurse -Filter ffmpeg.exe -ErrorAction SilentlyContinue | Select-Object -First 1
-'real: '+$real.FullName+' '+$real.Length
-if($real){ Copy-Item $real.FullName C:\Windows\System32\ffmpeg.exe -Force; $pr=Join-Path $real.DirectoryName 'ffprobe.exe'; if(Test-Path $pr){Copy-Item $pr C:\Windows\System32\ffprobe.exe -Force} }
-(Get-Item C:\Windows\System32\ffmpeg.exe).Length
-(& C:\Windows\System32\ffmpeg.exe -version 2>&1 | Select-Object -First 1)
+# 1794208364.883507
+$body=@{data=@('Merhaba, bu bir deneme.','Ahmet (erkek)',0);fn_index=0}|ConvertTo-Json -Compress
+try{ $r=Invoke-RestMethod -Uri http://127.0.0.1:7870/run/predict -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 240; ($r|ConvertTo-Json -Depth 5 -Compress).Substring(0,[Math]::Min(700,($r|ConvertTo-Json -Depth 5 -Compress).Length)) }catch{ 'ERR: '+$_.Exception.Message }
