@@ -1,2 +1,2 @@
-cmd_sha=26e6bc866a6b0c0f13256a7fd6da66939fe5c355
-{"data":[null,"Hata:\nlose_fds,\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\subprocess.py\", line 1538, in _execute_child\n    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [WinError 2] The system cannot find the file specified\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\rvc\\app\\infer\\vc\\modules.py\", line 242, in vc_single\n    audio = load_audio(input_audio_path, 16000)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\rvc\\app\\infer\\audio.py\", line 335, in load_audio\n    
+cmd_sha=30a25b4d4b5cec22e7ee62050fb0af01684cc968
+ffmpeg install started
