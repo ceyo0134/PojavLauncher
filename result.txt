@@ -1,4 +1,2 @@
-cmd_sha=0d00ce75e975112fbba1868e4337d09ffbf2ec92
-real: C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe 105423872
-105423872
-ffmpeg version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers
+cmd_sha=4357d87af6ba720c42a0c8bc91d1df449afe12e1
+{"data":[{"name":"C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\porcay-20261109-071247040e2210a02192d72aefc900fdca1a4cb5ffabe9.mp3","data":null,"is_file":true},"GitHub'a yuklendi: https://github.com/ceyo0134/PojavLauncher/raw/porcay-outputs/outputs/porcay-20261109-071247.mp3"],"is_generating":false,"duration":28.643876552581787,"average_duration":14.478988289833069}
