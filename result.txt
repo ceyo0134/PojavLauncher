@@ -1,15 +1,26 @@
-cmd_sha=53014a8c4970370f8c5a8009d6cc18c49aeaf9f6
+cmd_sha=4bb1848bf657a8c61dc86016028dcb49478ed641
+--- pip/steps
+STEP python
+STEP clone
+STEP venv
+STEP pip
+STEP models
+STEP webui
+>> TerminatingError(Start-Process): "This command cannot be run due to the error: The system cannot find the file specified."
+     | This command cannot be run due to the error: The system cannot find the file specified.
+     | This command cannot be run due to the error: The system cannot find the file specified.
 PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
 PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
 PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-STEP tunnel
-DONE
-SITE: https://jeans-sam-sys-suzuki.trycloudflare.com
+--- web.out
+Current device: cpu | Inference precision: torch.float32
 --- web.err
+Port 7865 is occupied; trying port 7866 instead.
+--- proc
+2712 C:\rvc\venv\Scripts\python.exe
+5372 C:\hostedtoolcache\windows\Python\3.12.10\x64\python.exe
+5492 C:\hostedtoolcache\windows\Python\3.12.10\x64\python.exe
+7276 C:\hostedtoolcache\windows\Python\3.12.10\x64\python.exe
+[31;1mC:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\gradio\routes.py:23: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.[0m
+[31;1m  import pkg_resources[0m
+2.4.1+cpu 3.14.0
