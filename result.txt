@@ -1,16 +1,2 @@
-cmd_sha=743b0e00cfd464ac7cc6924ef1ac60e9f7ac97d7
-STEP pull
-STEP pip
-STEP start
-GH_REPO=ceyo0134/PojavLauncher token_set=True
-PS>TerminatingError(Invoke-WebRequest): "No connection could be made because the target machine actively refused it."
-UP
-STEP tunnel
-DONE
-TTS_URL: https://launches-alot-semi-agent.trycloudflare.com
---- tts.err
-  import pkg_resources
-C:\rvc\app\infer\vc\modules.py:174: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pick
-  self.cpt = torch.load(person, map_location="cpu")
-C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\torch\nn\utils\weight_norm.py:134: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in 
-  WeightNorm.apply(module, name, dim)
+cmd_sha=26e6bc866a6b0c0f13256a7fd6da66939fe5c355
+{"data":[null,"Hata:\nlose_fds,\n  File \"C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\subprocess.py\", line 1538, in _execute_child\n    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [WinError 2] The system cannot find the file specified\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\rvc\\app\\infer\\vc\\modules.py\", line 242, in vc_single\n    audio = load_audio(input_audio_path, 16000)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\rvc\\app\\infer\\audio.py\", line 335, in load_audio\n    
