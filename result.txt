@@ -1,4 +1,4 @@
-cmd_sha=c72d6f7b11a5f55f01bd9115002a1fab6f0aac3c
-ffmpeg at: C:\ProgramData\Chocolatey\bin\ffmpeg.exe
-FFDONE
-True
+cmd_sha=0d00ce75e975112fbba1868e4337d09ffbf2ec92
+real: C:\ProgramData\chocolatey\lib\ffmpeg\tools\ffmpeg\bin\ffmpeg.exe 105423872
+105423872
+ffmpeg version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers
