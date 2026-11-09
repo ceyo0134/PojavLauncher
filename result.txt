@@ -1,4 +1,2 @@
-cmd_sha=a556fae506196885382352733480d160c2dd9d71
-24616960
-host exe exists: True
-chromoting Stopped
+cmd_sha=7583f29f2aa57fede393f0e5854e49500289876d
+bootstrap started
